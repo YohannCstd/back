@@ -36,6 +36,7 @@ db.run(`CREATE TABLE IF NOT EXISTS posts (
     created_at TEXT,
     updated_at TEXT,
     appointment_date TEXT,
+    title TEXT,
     description TEXT,
     limitParticipants INTEGER
   )`);

@@ -6,6 +6,7 @@ class Post {
     this.createdAt = post.createdAt;
     this.updatedAt = post.updatedAt;
     this.appointmentDate = post.appointmentDate;
+    this.title = post.title;
     this.description = post.description;
     this.limitParticipants = post.limitParticipants;
   }
@@ -13,13 +14,14 @@ class Post {
   static create(newPost) {
     return new Promise((resolve, reject) => {
       db.run(
-        `INSERT INTO posts (user_id, created_at, updated_at, appointment_date, description, limitParticipants)
-              VALUES (?, ?, ?, ?,?,?)`,
+        `INSERT INTO posts (user_id, created_at, updated_at, appointment_date, title,description, limitParticipants)
+              VALUES (?, ?, ?, ?,?,?,?)`,
         [
           newPost.userId,
           newPost.createdAt,
           newPost.updatedAt,
           newPost.appointmentDate,
+          newPost.title,
           newPost.description,
           newPost.limitParticipants,
         ],

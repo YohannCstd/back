@@ -2,9 +2,9 @@ const postModel = require("../models/post.js");
 const moment = require("moment-timezone");
 
 exports.createPost = async (req, res) => {
-  const { userId, appointmentDate, description, limitParticipants } = req.body;
+  const { userId, appointmentDate, title,description, limitParticipants } = req.body;
 
-  if(!userId || !appointmentDate || !description || !limitParticipants) return res.status(400).json({message: "Missing parameters"});
+  if(!userId || !appointmentDate || !title || !description || !limitParticipants) return res.status(400).json({message: "Missing parameters"});
 
   const createdAt = moment().tz("Europe/Paris").format("YYYY-MM-DD HH:mm:ss");
 
@@ -13,6 +13,7 @@ exports.createPost = async (req, res) => {
       userId,
       createdAt,
       appointmentDate,
+      title,
       description,
       limitParticipants,
     });
