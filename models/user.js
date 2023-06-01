@@ -18,8 +18,8 @@ class User {
   static create(newUser) {
     return new Promise((resolve, reject) => {
       db.run(
-        `INSERT INTO users (name, firstname, birthdate, password, email, address, latitude, longitude)
-              VALUES (?, ?, ?, ?,?,?,?,?)`,
+        `INSERT INTO users (name, firstname, birthdate, password, email, address, latitude, longitude, avatar, description)
+              VALUES (?, ?, ?, ?,?,?,?,?,?,?)`,
         [
           newUser.name,
           newUser.firstname,
@@ -29,6 +29,8 @@ class User {
           newUser.adress,
           newUser.latitude,
           newUser.longitude,
+          newUser.avatar,
+          newUser.description,
         ],
         (err) => {
           if (err) {

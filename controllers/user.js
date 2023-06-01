@@ -5,7 +5,7 @@ const mailService = require("../services/mail");
 const shortid = require('shortid');
 
 exports.register = async (req, res) => {
-  let { name, firstname, birthdate, password, email, adress } = req.body;
+  let { name, firstname, birthdate, password, email, adress, latitude, longitude, avatar, description } = req.body;
 
   if (
     !name ||
@@ -13,7 +13,11 @@ exports.register = async (req, res) => {
     !birthdate ||
     !password ||
     !email ||
-    !adress
+    !adress ||
+    !latitude ||
+    !longitude ||
+    !avatar ||
+    !description
   ) {
     return res.status(400).json({ error: "Missing parameters" });
   }
@@ -48,6 +52,10 @@ exports.register = async (req, res) => {
         password,
         email,
         adress,
+        latitude,
+        longitude,
+        avatar,
+        description
       });
 
       return res.status(200).json({ message: "User registered successfully" });
@@ -138,7 +146,7 @@ exports.confirmEmail = async (req, res) => {
 
 exports.findById = async (req, res) => {
   const { id } = req.params;
-  
+
   try {
     const user = await userModel.findById(id);
 
