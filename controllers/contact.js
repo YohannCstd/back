@@ -78,31 +78,19 @@ exports.getAllContactsByUserId = async (req, res) => {
   try {
     const user = await userModel.findById(userId);
 
-    const contacts = await contactModel.findAllContactsByUserId(userId);
+    const contactsRaw = await contactModel.findAllContactsByUserId(userId);
 
-    for (const contact of contacts) {
-      let message = await messageModel.findLastMessageByContactId(contact.id);
-      if (message === undefined) message = [];
-      else contact.lastMessage = message;
-      delete contact.id;
-
-      if (contact.contact1_id === userId) {
-        contact.user = user;
-        delete contact.contact1_id;
-
-        const contact2 = await userModel.findById(contact.contact2_id);
-        contact.userContact = contact2;
-        delete contact.contact2_id;
-      } else if (contact.contact2_id === userId) {
-        contact.user = user;
-        delete contact.contact2_id;
-
-        const contact1 = await userModel.findById(contact.contact1_id);
-        contact.userContact = contact1;
-        delete contact.contact1_id;
+    const contacts = await Promise.all(contactsRaw.map(async (contact) => {
+      const userContact = await userModel.findById(contact.contact1_id === userId ? contact.contact1_id : contact.contact2_id);
+      let lastMessage = await messageModel.findLastMessageByContactId(contact.id) || [];
+      return {
+        user,
+        userContact,
+        lastMessage,
+        status: contact.status
       }
-    }
-    
+    }));
+
     return res.status(200).json(contacts);
   } catch (error) {
     console.log(error);

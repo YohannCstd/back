@@ -5,7 +5,7 @@ const mailService = require("../services/mail");
 const shortid = require('shortid');
 
 exports.register = async (req, res) => {
-  let { name, firstname, birthdate, password, email, adress, latitude, longitude, avatar, description } = req.body;
+  let { name, firstname, birthdate, password, email, address, latitude, longitude, avatar, description } = req.body;
 
   if (
     !name ||
@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
     !birthdate ||
     !password ||
     !email ||
-    !adress ||
+    !address ||
     !latitude ||
     !longitude ||
     !avatar ||
@@ -51,7 +51,7 @@ exports.register = async (req, res) => {
         birthdate,
         password,
         email,
-        adress,
+        address,
         latitude,
         longitude,
         avatar,
@@ -92,7 +92,7 @@ exports.login = async (req, res, next) => {
       // Si l'utilisateur existe et le mot de passe est correct, générer un token d'accès et le renvoyer au client
       const token = generateToken.generateAccessToken({ id: user._id });
 
-      res.json({ token });
+      res.json({ token, user });
     });
   } catch (error) {
     console.error(error);
