@@ -13,6 +13,8 @@ const app = express();
 // Importation de body-parser
 const bodyParser = require("body-parser");
 
+var cors = require('cors');
+app.use(cors());
 // Gérer les problèmes de CORS
 app.use((req,res, next) => {
     res.setHeader("Access-Control-Allow-Origin","*");
