@@ -117,31 +117,31 @@ exports.postById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Recuperation du post
+    // Récupération du post
     const post = await postModel.findById(id);
 
-    // Recuperation de l'utilisateur
+    // Récupération de l'utilisateur
     const user = await userModel.findById(post.user_id);
     post.user = user;
     delete post.user_id;
 
-    // Recuperation des participants
+    // Récupération des participants
     let participants = await participantModel.findByPostId(post.id);
     if (participants == undefined) participants = [];
     else {
-      participants.forEach(async (participant) => {
-        // Recuperation de l'utilisateur
+      for (const participant of participants) {
+        // Récupération de l'utilisateur
         const user = await userModel.findById(participant.user_id);
         participant.user = user;
 
-        // Recuperation de l'animal
+        // Récupération de l'animal
         const pet = await petModel.findById(participant.pet_id);
         participant.pet = pet;
 
         delete participant.post_id;
         delete participant.user_id;
         delete participant.pet_id;
-      });
+      }
     }
     post.participants = participants;
 
