@@ -101,3 +101,20 @@ exports.findAll = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+exports.checkIfemailExist = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: "Missing parameters" });
+  }
+
+  try {
+    const user = await userModel.findByEmail(email);
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};

@@ -18,6 +18,7 @@ router.post("/login",userController.login);
 
 // USER
 router.get("/user",userController.findAll);
+router.post("/userEmail",userController.checkIfemailExist);
 
 // POST
 router.post("/post",authMiddleware.authenticateToken,postController.createPost);
