@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const userModel = require("../models/User");
 const generateToken = require("../middleware/auth");
+const mailService = require("../services/mail");
+const shortid = require('shortid');
 
 exports.register = async (req, res) => {
   let { name, firstname, birthdate, password, email, phone, adress } = req.body;
@@ -102,7 +104,7 @@ exports.findAll = async (req, res) => {
   }
 };
 
-exports.checkIfemailExist = async (req, res) => {
+exports.checkIfEmailExist = async (req, res) => {
   const { email } = req.body;
 
   if (!email) {
@@ -113,6 +115,23 @@ exports.checkIfemailExist = async (req, res) => {
     const user = await userModel.findByEmail(email);
 
     return res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.confirmEmail = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: "Missing parameters" });
+  }
+
+  try {
+    const code = shortid.generate().substring(0, 6);
+    mailService.sendMail(email, code);
+    return res.status(200).json({ code: code });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
