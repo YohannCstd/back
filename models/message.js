@@ -22,18 +22,18 @@ class Message {
           newMessage.content,
           newMessage.date,
         ],
-        (err) => {
+        function (err) {
           if (err) {
             console.error(err);
             reject(err);
           } else {
-            resolve("created");
+            resolve({ id: this.lastID, ...newMessage });
           }
         }
       );
     });
   }
-
+  
   static findAll() {
     return new Promise((resolve, reject) => {
       db.all(`SELECT * FROM message`, (err, messages) => {

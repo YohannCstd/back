@@ -19,14 +19,14 @@ exports.createMessage = async (req, res) => {
 
     const date = moment().tz("Europe/Paris").format("YYYY-MM-DD HH:mm:ss");
 
-    await messageModel.create({
+    const message = await messageModel.create({
       fromUserId,
       contactId,
       content,
       date,
     });
 
-    return res.status(201).json({ message: "Message created successfully!" });
+    return res.status(201).json(message);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error", error });
