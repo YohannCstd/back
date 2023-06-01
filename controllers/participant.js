@@ -1,6 +1,6 @@
 const participantModel = require("../models/participant.js");
 
-esports.addParticipant = async (req, res) => {
+exports.addParticipant = async (req, res) => {
   const { userId , petId, postId } = req.body;
 
   if(!userId || !petId || !postId) {

@@ -113,6 +113,23 @@ class Message {
       );
     });
   }
+
+  static findByContactId(contactId) {
+    return new Promise((resolve, reject) => {
+      db.all(
+        `SELECT * FROM message WHERE contact_id = ? ORDER BY date ASC`,
+        contactId,
+        (err, messages) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(messages);
+          }
+        }
+      );
+    });
+  }
 }
 
 module.exports = Message;

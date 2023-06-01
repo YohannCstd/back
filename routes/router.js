@@ -41,5 +41,6 @@ router.get("/contact/:userId",contactController.getAllContactsByUserId);
 // Message
 router.post("/message",messageController.createMessage);
 router.get("/message",messageController.getAllMessages);
+router.get("/message/:contactId",messageController.getMessagesByContactId);
 // Exportation du module
 module.exports =router;

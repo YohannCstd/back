@@ -93,3 +93,16 @@ exports.updateMessageById = async (req, res) => {
     return res.status(500).json({ message: "Internal server error", error });
   }
 };
+
+exports.getMessagesByContactId = async (req, res) => {
+  const { contactId } = req.params;
+
+  try {
+    const messages = await messageModel.findByContactId(contactId);
+
+    return res.status(200).json(messages);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
+}
