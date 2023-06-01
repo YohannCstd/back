@@ -4,7 +4,7 @@ class Pet {
   constructor(pet) {
     this.name = pet.name;
     this.userId = pet.userId;
-    this.photo = pet.photo;
+    this.avatar = pet.avatar;
     this.description = pet.description;
     this.type = pet.type;
   }
@@ -12,12 +12,12 @@ class Pet {
   static create(newPet) {
     return new Promise((resolve, reject) => {
       db.run(
-        `INSERT INTO pets (name, user_id, photo, description, type)
+        `INSERT INTO pets (name, user_id, avatar, description, type)
         VALUES (?, ?, ?, ?, ?)`,
         [
           newPet.name,
           newPet.userId,
-          newPet.photo,
+          newPet.avatar,
           newPet.description,
           newPet.type,
         ],
