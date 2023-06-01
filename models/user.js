@@ -7,7 +7,6 @@ class User {
     this.birthdate = user.birthdate;
     this.password = user.password;
     this.email = user.email;
-    this.phone = user.phone;
     this.description = user.description;
     this.avatar = user.avatar;
     this.address = user.address;
@@ -19,15 +18,14 @@ class User {
   static create(newUser) {
     return new Promise((resolve, reject) => {
       db.run(
-        `INSERT INTO users (name, firstname, birthdate, password, email, phone, address, latitude, longitude)
-              VALUES (?, ?, ?, ?,?,?,?,?,?)`,
+        `INSERT INTO users (name, firstname, birthdate, password, email, address, latitude, longitude)
+              VALUES (?, ?, ?, ?,?,?,?,?)`,
         [
           newUser.name,
           newUser.firstname,
           newUser.birthdate,
           newUser.password,
           newUser.email,
-          newUser.phone,
           newUser.adress,
           newUser.latitude,
           newUser.longitude,
@@ -47,6 +45,19 @@ class User {
   static findByEmail(email) {
     return new Promise((resolve, reject) => {
       db.get(`SELECT * FROM users WHERE email = ?`, email, (err, user) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(user);
+        }
+      });
+    });
+  }
+
+  static findById(id) {
+    return new Promise((resolve, reject) => {
+      db.get(`SELECT id,name,firstname, birthdate, email, description, avatar, address, latitude, longitude, isAdmin FROM users WHERE id = ?`, id, (err, user) => {
         if (err) {
           console.error(err);
           reject(err);

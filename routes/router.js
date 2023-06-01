@@ -19,12 +19,14 @@ router.post("/login",userController.login);
 
 // USER
 router.get("/user",userController.findAll);
+router.get("/user/:id",userController.findById);
 router.post("/userEmail",userController.checkIfEmailExist);
 router.post("/confirmUser",userController.confirmEmail);
 
 // POST
-router.post("/post",authMiddleware.authenticateToken,postController.createPost);
-router.get("/post",authMiddleware.authenticateToken,postController.Allposts);
+router.post("/post",postController.createPost);
+router.get("/post",postController.Allposts);
+router.get("/post/:id",postController.postById);
 router.delete("/post/:id",authMiddleware.authenticateToken,postController.deleteById);
 router.put("/post/:id",authMiddleware.authenticateToken,postController.updateById);
 

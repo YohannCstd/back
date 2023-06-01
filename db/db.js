@@ -12,7 +12,6 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
     birthdate TEXT,
     password TEXT,
     email TEXT UNIQUE,
-    phone TEXT UNIQUE,
     description TEXT,
     avatar TEXT,
     address TEXT,

@@ -46,6 +46,19 @@ class Pet {
     });
   }
 
+  static findById(id) {
+    return new Promise((resolve, reject) => {
+      db.all(`SELECT * FROM pets WHERE id = ?`, id, (err, pet) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(pet);
+        }
+      });
+    });
+  }
+
   static findAll() {
     return new Promise((resolve, reject) => {
       db.all(`SELECT * FROM pets`, (err, pets) => {

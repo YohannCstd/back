@@ -1,11 +1,11 @@
 const bcrypt = require("bcrypt");
-const userModel = require("../models/User");
+const userModel = require("../models/user");
 const generateToken = require("../middleware/auth");
 const mailService = require("../services/mail");
 const shortid = require('shortid');
 
 exports.register = async (req, res) => {
-  let { name, firstname, birthdate, password, email, phone, adress } = req.body;
+  let { name, firstname, birthdate, password, email, adress } = req.body;
 
   if (
     !name ||
@@ -13,7 +13,6 @@ exports.register = async (req, res) => {
     !birthdate ||
     !password ||
     !email ||
-    !phone ||
     !adress
   ) {
     return res.status(400).json({ error: "Missing parameters" });
@@ -48,7 +47,6 @@ exports.register = async (req, res) => {
         birthdate,
         password,
         email,
-        phone,
         adress,
       });
 
@@ -137,3 +135,16 @@ exports.confirmEmail = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+exports.findById = async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    const user = await userModel.findById(id);
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}

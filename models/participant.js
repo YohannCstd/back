@@ -46,6 +46,19 @@ class Participant {
     });
   }
 
+  static findByPostId(postId) {
+    return new Promise((resolve, reject) => {
+      db.get(`SELECT * FROM participants WHERE post_id = ?`, postId, (err, participant) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(participant);
+        }
+      });
+    });
+  }
+
   static deleteById(id) {
     return new Promise((resolve, reject) => {
       db.run(`DELETE FROM participants WHERE id = ?`, id, (err) => {
