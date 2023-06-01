@@ -1,97 +1,103 @@
-const bcrypt = require('bcrypt');
-const User = require('../models/User');
-const generateToken = require('../middleware/auth');
+const bcrypt = require("bcrypt");
+const userModel = require("../models/User");
+const generateToken = require("../middleware/auth");
 
-exports.register = (req, res) => {
-  const { firstname, lastname, email, password } = req.body;
+exports.register = async (req, res) => {
+  let { name, firstname, birthdate, password, email, phone, adress } = req.body;
 
-  if(req.body.firstname === undefined || req.body.lastname === undefined || req.body.email === undefined || req.body.password === undefined) {
-    return res.status(400).json({ error: 'All fields are required' });
+  if (
+    !name ||
+    !firstname ||
+    !birthdate ||
+    !password ||
+    !email ||
+    !phone ||
+    !adress
+  ) {
+    return res.status(400).json({ error: "Missing parameters" });
   }
 
   // Vérifier si l'utilisateur existe déjà
-  User.findByEmail(email, (err, user) => {
+  const user = await userModel.findByEmail(email);
+
+  if (user) {
+    return res.status(400).json({ error: "User already exists" });
+  }
+
+  // Crypter le mot de passe
+  bcrypt.genSalt(10, (err, salt) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: 'Internal server error' });
+      return res.status(500).json({ error: "Internal server error" });
     }
 
-    if (user) {
-      return res.status(400).json({ error: 'User already exists' });
-    }
-
-    // Créer un nouvel utilisateur
-    const newUser = new User({ firstname, lastname, email, password });
-    
-    // Crypter le mot de passe
-    bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(password, salt, async (err, hash) => {
       if (err) {
         console.error(err);
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).json({ error: "Internal server error" });
       }
 
-      bcrypt.hash(newUser.password, salt, (err, hash) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({ error: 'Internal server error' });
-        }
+      password = hash;
 
-        newUser.password = hash;
-
-        // Enregistrer l'utilisateur dans la base de données
-        User.create(newUser, (err, user) => {
-          if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Internal server error' });
-          }
-
-          return res.json({ message: 'User registered successfully' });
-        });
+      // Enregistrer l'utilisateur dans la base de données
+      await userModel.create({
+        name,
+        firstname,
+        birthdate,
+        password,
+        email,
+        phone,
+        adress,
       });
+
+      return res.status(200).json({ message: "User registered successfully" });
     });
   });
 };
 
-exports.login = (req, res, next) => {
+exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
-  // Rechercher l'utilisateur dans la base de données avec l'adresse email fournie
-  User.findByEmail(email, (err, user) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Internal server error' });
-    }
+  if (!email || !password) {
+    return res.status(400).json({ error: "Missing parameters" });
+  }
+
+  try {
+    // Rechercher l'utilisateur dans la base de données avec l'adresse email fournie
+    const user = await userModel.findByEmail(email);
 
     if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: "Invalid credentials" });
     }
 
     // Vérifier si le mot de passe est correct
     bcrypt.compare(password, user.password, (err, result) => {
       if (err) {
         console.error(err);
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).json({ error: "Internal server error" });
       }
 
       if (!result) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+        return res.status(401).json({ error: "Invalid credentials" });
       }
 
       // Si l'utilisateur existe et le mot de passe est correct, générer un token d'accès et le renvoyer au client
       const token = generateToken.generateAccessToken({ id: user._id });
-      
+
       res.json({ token });
     });
-  });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };
 
-exports.findAll = (req, res) => {
-  User.findAll((err, user) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Internal server error' });
-    }
-
-    return res.json({ users: user });
-  });
+exports.findAll = async (req, res) => {
+  try {
+    const users = await userModel.findAll();
+    return res.status(200).json({ users });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };
