@@ -96,6 +96,23 @@ class Message {
       });
     });
   }
+
+  static findLastMessageByContactId(contactId) {
+    return new Promise((resolve, reject) => {
+      db.get(
+        `SELECT content,date FROM messages WHERE contact_id = ? ORDER BY date DESC LIMIT 1`,
+        contactId,
+        (err, message) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(message);
+          }
+        }
+      );
+    });
+  }
 }
 
 module.exports = Message;

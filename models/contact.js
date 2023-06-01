@@ -85,6 +85,23 @@ class Contact {
       });
     });
   }
+
+  static findAllContactsByUserId(userId) {
+    return new Promise((resolve, reject) => {
+      db.all(
+        `SELECT * FROM contacts WHERE user_id1 = ? OR user_id2 = ?`,
+        [userId, userId],
+        (err, contacts) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(contacts);
+          }
+        }
+      );
+    });
+  }
 }
 
 module.exports = Contact;

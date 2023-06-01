@@ -8,6 +8,7 @@ const versionController = require("../controllers/version");
 const userController = require("../controllers/user");
 const postController = require("../controllers/post");
 const participantController = require("../controllers/participant");
+const contactController = require("../controllers/contact");
 
 const router = express.Router();
 
@@ -33,5 +34,8 @@ router.put("/post/:id",authMiddleware.authenticateToken,postController.updateByI
 // Participant
 router.get("/participant",authMiddleware.authenticateToken,participantController.Allparticipants);
 router.delete("/participant/:id",authMiddleware.authenticateToken,participantController.deleteById);
+
+// Contact 
+router.get("/contact/:userId",contactController.getAllContactsByUserId);
 // Exportation du module
 module.exports =router;
