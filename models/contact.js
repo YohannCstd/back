@@ -89,7 +89,7 @@ class Contact {
   static findAllContactsByUserId(userId) {
     return new Promise((resolve, reject) => {
       db.all(
-        `SELECT * FROM contacts WHERE user_id1 = ? OR user_id2 = ?`,
+        `SELECT * FROM contacts WHERE contact1_id = ? OR contact2_id = ?`,
         [userId, userId],
         (err, contacts) => {
           if (err) {
