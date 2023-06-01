@@ -9,7 +9,7 @@ const userController = require("../controllers/user");
 const postController = require("../controllers/post");
 const participantController = require("../controllers/participant");
 const contactController = require("../controllers/contact");
-
+const messageController = require("../controllers/message");
 const router = express.Router();
 
 router.get("/version",authMiddleware.authenticateToken,versionController.version);
@@ -37,5 +37,9 @@ router.delete("/participant/:id",authMiddleware.authenticateToken,participantCon
 
 // Contact 
 router.get("/contact/:userId",contactController.getAllContactsByUserId);
+
+// Message
+router.post("/message",messageController.createMessage);
+router.get("/message",messageController.getAllMessages);
 // Exportation du module
 module.exports =router;

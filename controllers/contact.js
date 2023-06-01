@@ -81,7 +81,7 @@ exports.getAllContactsByUserId = async (req, res) => {
     const contacts = await contactModel.findAllContactsByUserId(userId);
 
     for (const contact of contacts) {
-      const message = await messageModel.findLastMessageByContactId(contact.id);
+      let message = await messageModel.findLastMessageByContactId(contact.id);
       if (message === undefined) message = [];
       else contact.lastMessage = message;
       delete contact.id;

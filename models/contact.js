@@ -11,15 +11,15 @@ class Contact {
   static create(newContact) {
     return new Promise((resolve, reject) => {
       db.run(
-        `INSERT INTO contacts (user_id1, user_id2, status)
+        `INSERT INTO contacts (contact1_id, contact2_id, status)
         VALUES (?, ?, ?)`,
-        [newContact.userId1, newContact.userId2, newContact.status],
-        (err) => {
+        [newContact.fromUserId, newContact.toUserId, newContact.status],
+        function(err) {
           if (err) {
             console.error(err);
             reject(err);
           } else {
-            resolve('created');
+            resolve(this.lastID); // Renvoyer l'ID généré lors de l'insertion
           }
         }
       );
@@ -66,7 +66,24 @@ class Contact {
             console.error(err);
             reject(err);
           } else {
-            resolve('updated');
+            resolve("updated");
+          }
+        }
+      );
+    });
+  }
+
+  static findByfromUserIdAndToUserId(fromUserId, toUserId) {
+    return new Promise((resolve, reject) => {
+      db.get(
+        `SELECT * FROM contacts WHERE contact1_id = ? AND contact2_id = ?`,
+        [fromUserId, toUserId],
+        (err, contact) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(contact);
           }
         }
       );
@@ -80,7 +97,7 @@ class Contact {
           console.error(err);
           reject(err);
         } else {
-          resolve('deleted');
+          resolve("deleted");
         }
       });
     });

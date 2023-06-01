@@ -1,13 +1,27 @@
 const messageModel = require("../models/message");
+const contactModel = require("../models/contact");
+const moment = require("moment-timezone");
 
 exports.createMessage = async (req, res) => {
-  const { fromUserId, contactId, groupId, content, date } = req.body;
+  const { fromUserId, toUserId, content } = req.body;
 
   try {
+
+    const alreadyContact = await contactModel.findByfromUserIdAndToUserId(fromUserId, toUserId);
+    
+    let contactId = 0;
+    if(alreadyContact == undefined) {
+      contactId = await contactModel.create({fromUserId, toUserId, status: "nonLu"});
+      console.log(contactId)
+    } else {
+      contactId = alreadyContact.id;
+    }
+
+    const date = moment().tz("Europe/Paris").format("YYYY-MM-DD HH:mm:ss");
+
     await messageModel.create({
       fromUserId,
       contactId,
-      groupId,
       content,
       date,
     });

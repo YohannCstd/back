@@ -13,7 +13,7 @@ class Message {
   static create(newMessage) {
     return new Promise((resolve, reject) => {
       db.run(
-        `INSERT INTO messages (from_user_id, contact_id, group_id, content, date)
+        `INSERT INTO message (from_user_id, contact_id, group_id, content, date)
         VALUES (?, ?, ?, ?, ?)`,
         [
           newMessage.fromUserId,
@@ -36,7 +36,7 @@ class Message {
 
   static findAll() {
     return new Promise((resolve, reject) => {
-      db.all(`SELECT * FROM messages`, (err, messages) => {
+      db.all(`SELECT * FROM message`, (err, messages) => {
         if (err) {
           console.error(err);
           reject(err);
@@ -49,7 +49,7 @@ class Message {
 
   static findById(id) {
     return new Promise((resolve, reject) => {
-      db.get(`SELECT * FROM messages WHERE id = ?`, id, (err, message) => {
+      db.get(`SELECT * FROM message WHERE id = ?`, id, (err, message) => {
         if (err) {
           console.error(err);
           reject(err);
@@ -63,7 +63,7 @@ class Message {
   static updateById(id, newMessage) {
     return new Promise((resolve, reject) => {
       db.run(
-        `UPDATE messages SET from_user_id = ?, contact_id = ?, group_id = ?, content = ?, date = ? WHERE id = ?`,
+        `UPDATE message SET from_user_id = ?, contact_id = ?, group_id = ?, content = ?, date = ? WHERE id = ?`,
         [
           newMessage.fromUserId,
           newMessage.contactId,
@@ -86,7 +86,7 @@ class Message {
 
   static deleteById(id) {
     return new Promise((resolve, reject) => {
-      db.run(`DELETE FROM messages WHERE id = ?`, id, (err) => {
+      db.run(`DELETE FROM message WHERE id = ?`, id, (err) => {
         if (err) {
           console.error(err);
           reject(err);
@@ -100,7 +100,7 @@ class Message {
   static findLastMessageByContactId(contactId) {
     return new Promise((resolve, reject) => {
       db.get(
-        `SELECT content,date FROM messages WHERE contact_id = ? ORDER BY date DESC LIMIT 1`,
+        `SELECT content,date FROM message WHERE contact_id = ? ORDER BY date DESC LIMIT 1`,
         contactId,
         (err, message) => {
           if (err) {
