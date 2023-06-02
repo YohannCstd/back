@@ -1,11 +1,23 @@
 const bcrypt = require("bcrypt");
 const userModel = require("../models/user");
+const petModel = require("../models/pet");
 const generateToken = require("../middleware/auth");
 const mailService = require("../services/mail");
-const shortid = require('shortid');
+const shortid = require("shortid");
 
 exports.register = async (req, res) => {
-  let { name, firstname, birthdate, password, email, address, latitude, longitude, avatar, description } = req.body;
+  let {
+    name,
+    firstname,
+    birthdate,
+    password,
+    email,
+    address,
+    latitude,
+    longitude,
+    avatar,
+    description,
+  } = req.body;
 
   if (
     !name ||
@@ -55,7 +67,7 @@ exports.register = async (req, res) => {
         latitude,
         longitude,
         avatar,
-        description
+        description,
       });
 
       return res.status(200).json({ message: "User registered successfully" });
@@ -150,9 +162,12 @@ exports.findById = async (req, res) => {
   try {
     const user = await userModel.findById(id);
 
-    return res.status(200).json(user);
+    const animals = await petModel.findByUserId(id);
+    if(animals == undefined) animals = [];
+
+    return res.status(200).json({ user, animals });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
   }
-}
+};
