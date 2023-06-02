@@ -12,7 +12,7 @@ class Participant {
   static create(newParticipant) {
     return new Promise((resolve, reject) => {
       db.run(
-        `INSERT INTO participants (post_id, user_id, pet_id, status, sstatus_message)
+        `INSERT INTO participants (post_id, user_id, pet_id, status, status_message)
               VALUES (?, ?, ?, ?,?)`,
         [
           newParticipant.postId,

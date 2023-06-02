@@ -86,7 +86,20 @@ exports.Allposts = async (req, res) => {
 
         // Récupération des participants
         let participants = await participantModel.findByPostId(post.id);
+
         if (participants == undefined)participants = [];
+        else if(participants.length == undefined){
+            const user = await userModel.findById(participants.user_id);
+            participants.user = user;
+
+            // Récupération de l'animal
+            const pet = await petModel.findById(participants.pet_id);
+            participants.pet = pet;
+
+            delete participants.post_id;
+            delete participants.user_id;
+            delete participants.pet_id;
+        }
         else {
           for (const participant of participants) {
             // Récupération de l'utilisateur
