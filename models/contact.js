@@ -13,7 +13,7 @@ class Contact {
       db.run(
         `INSERT INTO contacts (contact1_id, contact2_id, status)
         VALUES (?, ?, ?)`,
-        [newContact.fromUserId, newContact.toUserId, newContact.status],
+        [newContact.userId1, newContact.userId2, newContact.status],
         function (err) {
           if (err) {
             console.error(err);

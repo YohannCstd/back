@@ -167,8 +167,7 @@ exports.findById = async (req, res) => {
   try {
     const user = await userModel.findById(id);
 
-    const animals = await petModel.findByUserId(id);
-    if (animals == undefined) animals = [];
+    const animals = await petModel.findByUserId(id) || [];
 
     user.animals = animals;
 
