@@ -26,7 +26,7 @@ class Pet {
             console.error(err);
             reject(err);
           } else {
-            resolve('created');
+            resolve({ id: this.lastID, ...newPet });
           }
         }
       );

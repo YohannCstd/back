@@ -4,7 +4,7 @@ exports.createPet = async (req, res) => {
   const { name, userId, avatar, description, type } = req.body;
 
   try {
-    await petModel.create({
+    const pet = await petModel.create({
       name,
       userId,
       avatar,
@@ -12,7 +12,7 @@ exports.createPet = async (req, res) => {
       type,
     });
 
-    return res.status(201).json({ message: "Pet created successfully!" });
+    return res.status(201).json({ pet });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error", error });

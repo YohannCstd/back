@@ -90,6 +90,10 @@ exports.login = async (req, res, next) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
+    const animals = await petModel.findByUserId(user.id) || [];
+
+    user.animals = animals;
+
     // Vérifier si le mot de passe est correct
     bcrypt.compare(password, user.password, (err, result) => {
       if (err) {
@@ -103,6 +107,7 @@ exports.login = async (req, res, next) => {
 
       // Si l'utilisateur existe et le mot de passe est correct, générer un token d'accès et le renvoyer au client
       const token = generateToken.generateAccessToken({ id: user._id });
+
 
       res.json({ token, user });
     });
@@ -163,7 +168,7 @@ exports.findById = async (req, res) => {
     const user = await userModel.findById(id);
 
     const animals = await petModel.findByUserId(id);
-    if(animals == undefined) animals = [];
+    if (animals == undefined) animals = [];
 
     user.animals = animals;
 
