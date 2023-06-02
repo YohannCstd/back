@@ -165,7 +165,9 @@ exports.findById = async (req, res) => {
     const animals = await petModel.findByUserId(id);
     if(animals == undefined) animals = [];
 
-    return res.status(200).json({ user, animals });
+    user.animals = animals;
+
+    return res.status(200).json(user);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
