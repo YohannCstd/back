@@ -14,7 +14,7 @@ class Contact {
         `INSERT INTO contacts (contact1_id, contact2_id, status)
         VALUES (?, ?, ?)`,
         [newContact.fromUserId, newContact.toUserId, newContact.status],
-        function(err) {
+        function (err) {
           if (err) {
             console.error(err);
             reject(err);
@@ -76,8 +76,8 @@ class Contact {
   static findByfromUserIdAndToUserId(fromUserId, toUserId) {
     return new Promise((resolve, reject) => {
       db.get(
-        `SELECT * FROM contacts WHERE contact1_id = ? AND contact2_id = ?`,
-        [fromUserId, toUserId],
+        `SELECT * FROM contacts WHERE contact1_id = ? and contact2_id = ? or contact1_id = ? and contact2_id = ?`,
+        [fromUserId, toUserId, toUserId, fromUserId],
         (err, contact) => {
           if (err) {
             console.error(err);

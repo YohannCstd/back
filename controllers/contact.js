@@ -81,15 +81,18 @@ exports.getAllContactsByUserId = async (req, res) => {
     const contactsRaw = await contactModel.findAllContactsByUserId(userId);
 
     const contacts = await Promise.all(contactsRaw.map(async (contact) => {
-      const userContact = await userModel.findById(contact.contact1_id === userId ? contact.contact1_id : contact.contact2_id);
+      const other = contact.contact1_id === parseInt(userId) ? contact.contact2_id : contact.contact1_id;
+      const userContact = await userModel.findById(other);
       let lastMessage = await messageModel.findLastMessageByContactId(contact.id) || [];
       return {
+        id: contact.id,
         user,
         userContact,
         lastMessage,
         status: contact.status
       }
     }));
+
 
     return res.status(200).json(contacts);
   } catch (error) {

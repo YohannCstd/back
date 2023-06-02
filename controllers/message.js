@@ -8,10 +8,10 @@ exports.createMessage = async (req, res) => {
   try {
 
     const alreadyContact = await contactModel.findByfromUserIdAndToUserId(fromUserId, toUserId);
-    
+
     let contactId = 0;
-    if(alreadyContact == undefined) {
-      contactId = await contactModel.create({fromUserId, toUserId, status: "nonLu"});
+    if (alreadyContact == undefined) {
+      contactId = await contactModel.create({ fromUserId, toUserId, status: "nonLu" });
       console.log(contactId)
     } else {
       contactId = alreadyContact.id;
@@ -98,7 +98,17 @@ exports.getMessagesByContactId = async (req, res) => {
   const { contactId } = req.params;
 
   try {
-    const messages = await messageModel.findByContactId(contactId);
+    let messages = await messageModel.findByContactId(contactId);
+    messages = messages.map((message) => (
+      {
+        id: message.id,
+        fromUserId: message.from_user_id,
+        contactId: message.contact_id,
+        groupId: message.group_id,
+        content: message.content,
+        date: message.date
+      }
+    ));
 
     return res.status(200).json(messages);
   } catch (error) {
