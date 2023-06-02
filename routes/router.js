@@ -10,6 +10,8 @@ const postController = require("../controllers/post");
 const participantController = require("../controllers/participant");
 const contactController = require("../controllers/contact");
 const messageController = require("../controllers/message");
+const petController = require("../controllers/pet");
+
 const router = express.Router();
 
 router.get("/version",authMiddleware.authenticateToken,versionController.version);
@@ -42,5 +44,9 @@ router.get("/contact/:userId",contactController.getAllContactsByUserId);
 router.post("/message",messageController.createMessage);
 router.get("/message",messageController.getAllMessages);
 router.get("/message/:contactId",messageController.getMessagesByContactId);
+
+// Pets
+router.post("/pet",petController.createPet);
+
 // Exportation du module
 module.exports =router;
