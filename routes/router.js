@@ -34,6 +34,7 @@ router.delete("/post/:id",authMiddleware.authenticateToken,postController.delete
 router.put("/post/:id",authMiddleware.authenticateToken,postController.updateById);
 
 // Participant
+router.post("/participant",participantController.addParticipant);
 router.get("/participant",authMiddleware.authenticateToken,participantController.Allparticipants);
 router.delete("/participant/:id",authMiddleware.authenticateToken,participantController.deleteById);
 
