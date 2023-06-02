@@ -115,7 +115,8 @@ exports.Allposts = async (req, res) => {
             delete participant.pet_id;
           }
         }
-        post.participants = participants;
+        if(participants.length == undefined) post.participants = [participants];
+        else post.participants = participants;
       }
     }
 
